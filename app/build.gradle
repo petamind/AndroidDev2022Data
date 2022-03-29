@@ -8,7 +8,7 @@ android {
     compileSdkVersion 32
     defaultConfig {
         applicationId "com.example.androiddata"
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 32
         versionCode 1
         versionName "1.0"
@@ -46,5 +46,11 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+    implementation 'androidx.compose.ui:ui:1.1.1'
+    implementation 'androidx.compose.material:material:1.1.1'
+    implementation 'androidx.activity:activity-compose:1.4.0'
+
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
 
 }

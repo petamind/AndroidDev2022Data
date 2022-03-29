@@ -25,12 +25,11 @@ class MainFragment : Fragment() {
     ): View {
         Log.i("LOG_TAG", "onCreateView: ")
         binding = MainFragmentBinding.inflate(layoutInflater)
-        val textview = binding.message
+        val recyclerView = binding.recyclerView
+
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.monsterData.observe(viewLifecycleOwner, Observer {
-            it.forEach(){ monster ->
-                textview.text =  "${textview.text}\n ${monster.name}"
-            }
+            recyclerView.adapter = MonsterGridViewAdapter(it)
         })
 
 
