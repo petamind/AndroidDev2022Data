@@ -18,10 +18,7 @@ class MonsterRepo(private val app: Application) {
     val monsterData = MutableLiveData<List<Monster>>()
 
     init {
-        CoroutineScope(Dispatchers.IO).launch {
-            callWebService()
-        }
-
+        refreshData()
     }
 
     @WorkerThread
@@ -35,5 +32,11 @@ class MonsterRepo(private val app: Application) {
             monsterData.postValue(serviceData)
         }
 
+    }
+
+    fun refreshData() {
+        CoroutineScope(Dispatchers.IO).launch {
+            callWebService()
+        }
     }
 }

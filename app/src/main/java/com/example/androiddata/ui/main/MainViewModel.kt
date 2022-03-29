@@ -14,6 +14,9 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
+    fun refreshData() {
+        dataRepo.refreshData()
+    }
 
     private val dataRepo = MonsterRepo(app)
     val monsterData = dataRepo.monsterData
