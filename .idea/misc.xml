@@ -6,6 +6,7 @@
         <entry key="app/src/main/res/drawable-mdpi/background_selected.xml" value="0.136" />
         <entry key="app/src/main/res/drawable/background.xml" value="0.136" />
         <entry key="app/src/main/res/drawable/background_grid.xml" value="0.136" />
+        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.18" />
         <entry key="app/src/main/res/layout/main_activity.xml" value="0.12552083333333333" />
         <entry key="app/src/main/res/layout/main_fragment.xml" value="0.12552083333333333" />
         <entry key="app/src/main/res/layout/monster_grid_item.xml" value="0.2" />
