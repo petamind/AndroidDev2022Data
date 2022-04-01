@@ -7,7 +7,7 @@ import com.squareup.moshi.Json
 @Entity(tableName = "monsters")
 data class Monster (
     @PrimaryKey(autoGenerate = true)
-    val monsterId: Int,
+    val monsterId: Int = 0,
     @Json(name = "monsterName") val name: String,
     val imageFile: String,
     val caption: String,

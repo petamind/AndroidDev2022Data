@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Monster::class], version = 1)
 abstract class MonsterDB: RoomDatabase() {
-    abstract fun monsterDao(): MonsterDB
+    abstract fun monsterDao(): MonsterDao
 
     companion object {
         @Volatile

@@ -1,10 +1,12 @@
 package com.example.androiddata.data
 
 import android.app.Application
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import com.example.androiddata.utils.FileHelper
+import com.example.androiddata.utils.LOG_TAG
 import com.example.androiddata.utils.NetworkHelper
 import com.example.androiddata.utils.WEB_SERVICE_URL
 import com.squareup.moshi.JsonAdapter
@@ -20,16 +22,23 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class MonsterRepo(private val app: Application) {
 
     val monsterData = MutableLiveData<List<Monster>>()
-
+    private val monsterDao = MonsterDB.getDatabase(app).monsterDao()
     init {
-        readDataFromCache().also {
-            if(it.isEmpty()){
-                refreshDataFromWeb()
+        CoroutineScope(Dispatchers.IO).launch {
+            val data = monsterDao.getAll()
+            if (data.isEmpty()){
+                callWebService()
+                CoroutineScope(Dispatchers.Main).launch{
+                    Toast.makeText(app, "Loading from WEB", Toast.LENGTH_SHORT).show()
+                }
             } else {
-                monsterData.value = it
-                Toast.makeText(app, "Read cache", Toast.LENGTH_SHORT).show()
+                readDataFromDB()
+                CoroutineScope(Dispatchers.Main).launch{
+                    Toast.makeText(app, "Loading from db", Toast.LENGTH_SHORT).show()
+                }
             }
         }
+
 
     }
 
@@ -37,12 +46,15 @@ class MonsterRepo(private val app: Application) {
     private suspend fun callWebService(){
         if(NetworkHelper.networkAvailable(app)){
             val retrofit= Retrofit.Builder().baseUrl(WEB_SERVICE_URL)
-                .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder().add(KotlinJsonAdapterFactory()).build()))
+                .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder()
+                    .add(KotlinJsonAdapterFactory()).build()))
                 .build()
             val service = retrofit.create(MonsterService::class.java)
             val serviceData = service.getMonsterData().body() ?: emptyList()
             monsterData.postValue(serviceData)
-            saveDataToCache(serviceData)
+            Log.i(LOG_TAG, "callWebService: $serviceData")
+            monsterDao.deleteAll()
+            saveDataToDB(serviceData)
         }
 
     }
@@ -71,6 +83,18 @@ class MonsterRepo(private val app: Application) {
                 adapter.fromJson(it)
             } ?: emptyList()
         }
+    }
 
+    private suspend fun readDataFromDB(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val data = monsterDao.getAll()
+            monsterData.postValue(data)
+        }
+    }
+
+    private suspend fun saveDataToDB(monsters: List<Monster>){
+        CoroutineScope(Dispatchers.IO).launch {
+            monsterDao.insertAll(monsters)
+        }
     }
 }
